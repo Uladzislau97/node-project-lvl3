@@ -1,0 +1,49 @@
+{
+  "name": "page-loader-js",
+  "version": "1.0.0",
+  "description": "Utility for downloading the specified address from the network.",
+  "keywords": [
+    "page-loader",
+    "page-loader"
+  ],
+  "main": "dist/index.js",
+  "bin": {
+    "hexlet": "dist/bin/page-loader.js"
+  },
+  "engines": {
+    "node": ">=8"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "test": "jest",
+    "build": "NODE_ENV=production babel src --out-dir dist --source-maps inline",
+    "prepublishOnly": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github-personal:Uladzislau97/python-project-lvl3.git"
+  },
+  "author": "Uladzislau Vasilyeu",
+  "license": "ISC",
+  "jest": {
+    "testEnvironment": "node"
+  },
+  "homepage": "https://github.com/Uladzislau97/python-project-lvl3#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.5.0",
+    "@babel/core": "^7.5.4",
+    "@babel/node": "^7.5.0",
+    "@babel/preset-env": "^7.5.4",
+    "babel-eslint": "^10.0.2",
+    "babel-jest": "^24.8.0",
+    "eslint": "^6.0.1",
+    "eslint-config-airbnb-base": "^13.2.0",
+    "eslint-plugin-babel": "^5.3.0",
+    "eslint-plugin-import": "^2.18.0",
+    "eslint-plugin-jest": "^22.7.2",
+    "jest": "^24.8.0",
+    "jest-cli": "^24.8.0"
+  }
+}
