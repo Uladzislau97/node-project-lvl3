@@ -8,7 +8,7 @@
   ],
   "main": "dist/index.js",
   "bin": {
-    "hexlet": "dist/bin/page-loader.js"
+    "page-loader-js": "dist/bin/page-loader.js"
   },
   "engines": {
     "node": ">=8"
