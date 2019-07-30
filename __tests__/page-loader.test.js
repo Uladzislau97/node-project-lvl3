@@ -2,7 +2,7 @@ import nock from 'nock';
 import os from 'os';
 import path from 'path';
 import { promises as fs } from 'fs';
-import loadPageByPath from '..';
+import loadPageByPath from '../src';
 
 test('save file by specified path', async () => {
   const responseFilePath = path.resolve(__dirname, '__fixtures__/test_1.html');
