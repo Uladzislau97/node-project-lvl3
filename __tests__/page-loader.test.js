@@ -1,33 +1,25 @@
 import nock from 'nock';
-import axios from 'axios';
 import os from 'os';
-import { promises as fs } from 'fs';
 import path from 'path';
-import loadPage from '..';
-
-const hostname = 'https://hexlet.io';
-axios.defaults.baseURL = hostname;
+import { promises as fs } from 'fs';
+import loadPageByPath from '..';
 
 test('save file by specified path', async () => {
-  const requestPath = '/courses';
-  const filepath = path.resolve(__dirname, '__fixtures__/test_1.html');
-
-  nock(hostname)
-    .get(requestPath)
-    .replyWithFile(200, filepath, {
+  const responseFilePath = path.resolve(__dirname, '__fixtures__/test_1.html');
+  nock('https://test-host.com')
+    .get('/test-path')
+    .replyWithFile(200, responseFilePath, {
       'Content-Type': 'text/html',
     });
 
+  const requestUrl = 'https://test-host.com/test-path';
   const tmpDir = os.tmpdir();
-  const requestUrl = `${hostname}${requestPath}`;
-  const pathForSave = await fs.mkdtemp(`${tmpDir}${path.sep}`);
+  const outputPath = await fs.mkdtemp(`${tmpDir}${path.sep}`);
+  await loadPageByPath(requestUrl, outputPath);
 
-  await loadPage(requestUrl, pathForSave);
+  const outputFilePath = path.resolve(outputPath, 'test-host-com-test-path.html');
+  const outputFileContent = await fs.readFile(outputFilePath, 'utf8');
+  const expectedContent = await fs.readFile(responseFilePath, 'utf8');
 
-  const actualFilePath = path.resolve(__dirname, pathForSave);
-  const actualContent = await fs.readFile(actualFilePath, 'utf8');
-  const expectedFilePath = path.resolve(__dirname, '__fixtures__/test_1.html');
-  const expectedContent = await fs.readFile(expectedFilePath, 'utf8');
-
-  expect(actualContent).toEqual(expectedContent);
+  expect(outputFileContent).toEqual(expectedContent);
 });
