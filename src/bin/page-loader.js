@@ -5,7 +5,7 @@ import loadPageByPath from '..';
 
 program
   .name('page-loader-js')
-  .version('1.0.1')
+  .version('1.0.2')
   .arguments('<url>')
   .action((url) => {
     const outputPath = program.output
