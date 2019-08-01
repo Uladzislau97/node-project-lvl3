@@ -3,14 +3,15 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import url from 'url';
 
-const loadPageByPath = (downloadUrl, outputPath) => axios
-  .get(downloadUrl)
+const loadPageByPath = (address, outputPath) => axios
+  .get(address)
   .then(({ data }) => {
-    const downloadUrlData = url.parse(downloadUrl);
-    const host = downloadUrlData.host.replace(/[./_:]/g, '-');
-    const pathname = downloadUrlData.pathname.replace(/[./_:]/g, '-');
-    const outputFileName = `${host}${pathname}.html`;
-    const outputFilePath = path.resolve(outputPath, outputFileName);
+    const notLettersOrNumbersRegex = /[\W_]/g;
+    const { host, pathname } = url.parse(address);
+    const outputFileName = `${host}${pathname}`
+      .replace(notLettersOrNumbersRegex, '-');
+    const fullOutputFileName = `${outputFileName}.html`;
+    const outputFilePath = path.resolve(outputPath, fullOutputFileName);
     return fs.writeFile(outputFilePath, data);
   });
 

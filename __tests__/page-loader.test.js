@@ -4,20 +4,24 @@ import path from 'path';
 import { promises as fs } from 'fs';
 import loadPageByPath from '../src';
 
-test('save file by specified path', async () => {
+test('loadPageByPath', async () => {
+  const host = 'https://test-host.com';
+  const requestPath = '/test_path';
+  const requestUrl = `${host}${requestPath}`;
+
   const responseFilePath = path.resolve(__dirname, '__fixtures__/test_1.html');
-  nock('https://test-host.com')
-    .get('/test-path')
+  nock(host)
+    .get(requestPath)
     .replyWithFile(200, responseFilePath, {
       'Content-Type': 'text/html',
     });
 
-  const requestUrl = 'https://test-host.com/test-path';
   const tmpDir = os.tmpdir();
   const outputPath = await fs.mkdtemp(`${tmpDir}${path.sep}`);
   await loadPageByPath(requestUrl, outputPath);
 
-  const outputFilePath = path.resolve(outputPath, 'test-host-com-test-path.html');
+  const outputFileName = 'test-host-com-test-path.html';
+  const outputFilePath = path.resolve(outputPath, outputFileName);
   const outputFileContent = await fs.readFile(outputFilePath, 'utf8');
   const expectedContent = await fs.readFile(responseFilePath, 'utf8');
 
