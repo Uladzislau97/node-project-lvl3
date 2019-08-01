@@ -7,8 +7,9 @@ const loadPageByPath = (address, outputPath) => axios
   .get(address)
   .then(({ data }) => {
     const notLettersOrNumbersRegex = /[\W_]/g;
-    const { host, pathname } = url.parse(address);
-    const outputFileName = `${host}${pathname}`
+    const { protocol } = url.parse(address);
+    const outputFileName = address
+      .replace(`${protocol}//`, '')
       .replace(notLettersOrNumbersRegex, '-');
     const fullOutputFileName = `${outputFileName}.html`;
     const outputFilePath = path.resolve(outputPath, fullOutputFileName);
