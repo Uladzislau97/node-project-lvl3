@@ -6,7 +6,7 @@ import loadPageByPath from '../src';
 
 test('loadPageByPath', async () => {
   const host = 'https://test-host.com';
-  const requestPath = '/test_path';
+  const requestPath = '/test_path?p1=v1&p2=v2';
   const requestUrl = `${host}${requestPath}`;
 
   const responseFilePath = path.resolve(__dirname, '__fixtures__/test_1.html');
@@ -20,7 +20,7 @@ test('loadPageByPath', async () => {
   const outputPath = await fs.mkdtemp(`${tmpDir}${path.sep}`);
   await loadPageByPath(requestUrl, outputPath);
 
-  const outputFileName = 'test-host-com-test-path.html';
+  const outputFileName = 'test-host-com-test-path-p1-v1-p2-v2-anchor.html';
   const outputFilePath = path.resolve(outputPath, outputFileName);
   const outputFileContent = await fs.readFile(outputFilePath, 'utf8');
   const expectedContent = await fs.readFile(responseFilePath, 'utf8');
