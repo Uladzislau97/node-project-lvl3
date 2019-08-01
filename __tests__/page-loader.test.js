@@ -20,7 +20,7 @@ test('loadPageByPath', async () => {
   const outputPath = await fs.mkdtemp(`${tmpDir}${path.sep}`);
   await loadPageByPath(requestUrl, outputPath);
 
-  const outputFileName = 'test-host-com-test-path-p1-v1-p2-v2-anchor.html';
+  const outputFileName = 'test-host-com-test-path-p1-v1-p2-v2.html';
   const outputFilePath = path.resolve(outputPath, outputFileName);
   const outputFileContent = await fs.readFile(outputFilePath, 'utf8');
   const expectedContent = await fs.readFile(responseFilePath, 'utf8');
