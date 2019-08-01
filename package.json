@@ -1,6 +1,6 @@
 {
   "name": "page-loader-js",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Utility for downloading the specified address from the network.",
   "keywords": [
     "page-loader",
