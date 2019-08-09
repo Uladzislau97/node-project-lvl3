@@ -8,9 +8,7 @@ program
   .version('1.0.2')
   .arguments('<url>')
   .action((url) => {
-    const outputPath = program.output
-      ? path.resolve(program.output)
-      : process.cwd();
+    const outputPath = path.resolve(program.output || '');
     loadPageByPath(url, outputPath).catch(console.log);
   })
   .description('Download the specified address from the network.')
