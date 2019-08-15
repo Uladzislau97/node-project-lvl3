@@ -9,7 +9,7 @@ test('loadPageByPath', async () => {
   const requestPath = '/test_path?p1=v1&p2=v2';
   const requestUrl = `${host}${requestPath}`;
 
-  const responseFilePath = path.resolve(__dirname, '__fixtures__/test_1.html');
+  const responseFilePath = path.resolve(__dirname, '__fixtures__/test_1/index.html');
   nock(host)
     .get(requestPath)
     .replyWithFile(200, responseFilePath, {
