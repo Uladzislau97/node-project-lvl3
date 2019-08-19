@@ -4,18 +4,31 @@ import path from 'path';
 import { promises as fs } from 'fs';
 import loadPageByPath from '../src';
 
-test('loadPageByPath', async () => {
-  const host = 'https://ru.hexlet.io';
-  const requestPath = '/courses';
-  const requestUrl = `${host}${requestPath}`;
+const hostName = 'https://ru.hexlet.io';
+const htmlContentType = 'text/html';
+const cssContentType = 'text/css';
+const jsContentType = 'application/javascript';
 
-  const responseFilePath = path.resolve(__dirname, '__fixtures__/test_1/index.html');
-  nock(host)
+let nockedHost;
+
+beforeEach(() => {
+  nockedHost = nock(hostName);
+});
+
+const nockFileRequests = (requestPath, responseFilePath, contentType) => {
+  nockedHost
     .get(requestPath)
     .replyWithFile(200, responseFilePath, {
-      'Content-Type': 'text/html',
+      'Content-Type': contentType,
     });
+};
 
+test('load html page', async () => {
+  const requestPath = '/courses';
+  const responseFilePath = path.resolve(__dirname, '__fixtures__/test_1/index.html');
+  nockFileRequests(requestPath, responseFilePath, htmlContentType);
+
+  const requestUrl = `${hostName}${requestPath}`;
   const tmpDir = os.tmpdir();
   const outputPath = await fs.mkdtemp(`${tmpDir}${path.sep}`);
   await loadPageByPath(requestUrl, outputPath);
@@ -26,4 +39,18 @@ test('loadPageByPath', async () => {
   const expectedContent = await fs.readFile(responseFilePath, 'utf8');
 
   expect(outputFileContent).toEqual(expectedContent);
+});
+
+test('load html page and other internal content', async () => {
+  const requestPath = '/courses';
+  const responseFilePath = path.resolve(__dirname, '__fixtures__/test_2/index.html');
+  nockFileRequests(requestPath, responseFilePath, htmlContentType);
+
+  const cssRequestPath = '/assets/index.css';
+  const responseCSSFilePath = path.resolve(__dirname, '__fixtures__/test_2/index.css');
+  nockFileRequests(cssRequestPath, responseCSSFilePath, cssContentType);
+
+  const jsRequestPath = '/assets/index.css';
+  const responseJSFilePath = path.resolve(__dirname, '__fixtures__/test_2/index.js');
+  nockFileRequests(jsRequestPath, responseJSFilePath, jsContentType);
 });
