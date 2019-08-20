@@ -8,6 +8,7 @@ const hostName = 'https://ru.hexlet.io';
 const htmlContentType = 'text/html';
 const cssContentType = 'text/css';
 const jsContentType = 'application/javascript';
+const binaryContentType = 'arraybuffer';
 
 let nockedHost;
 
@@ -53,4 +54,8 @@ test('load html page and other internal content', async () => {
   const jsRequestPath = '/assets/index.js';
   const responseJSFilePath = path.resolve(__dirname, '__fixtures__/test_2/index.js');
   nockFileRequests(jsRequestPath, responseJSFilePath, jsContentType);
+
+  const imgRequestPath = '/assets/index.jpg';
+  const responseImgFilePath = path.resolve(__dirname, '__fixtures__/test_2/index.jpg');
+  nockFileRequests(imgRequestPath, responseImgFilePath, binaryContentType);
 });
