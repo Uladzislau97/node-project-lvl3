@@ -50,7 +50,7 @@ test('load html page and other internal content', async () => {
   const responseCSSFilePath = path.resolve(__dirname, '__fixtures__/test_2/index.css');
   nockFileRequests(cssRequestPath, responseCSSFilePath, cssContentType);
 
-  const jsRequestPath = '/assets/index.css';
+  const jsRequestPath = '/assets/index.js';
   const responseJSFilePath = path.resolve(__dirname, '__fixtures__/test_2/index.js');
   nockFileRequests(jsRequestPath, responseJSFilePath, jsContentType);
 });
