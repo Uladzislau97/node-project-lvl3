@@ -24,14 +24,20 @@ const nockFileRequests = (requestPath, responseFilePath, contentType) => {
     });
 };
 
+const generateOutputPath = async () => {
+  const tmpDir = os.tmpdir();
+  const outputPath = `${tmpDir}${path.sep}`;
+  await fs.mkdtemp(outputPath);
+  return outputPath;
+};
+
 test('load html page', async () => {
   const requestPath = '/courses';
   const responseFilePath = path.resolve(__dirname, '__fixtures__/test_1/index.html');
   nockFileRequests(requestPath, responseFilePath, htmlContentType);
 
   const requestUrl = `${hostName}${requestPath}`;
-  const tmpDir = os.tmpdir();
-  const outputPath = await fs.mkdtemp(`${tmpDir}${path.sep}`);
+  const outputPath = await generateOutputPath();
   await loadPageByPath(requestUrl, outputPath);
 
   const outputFileName = 'ru-hexlet-io-courses.html';
@@ -43,9 +49,9 @@ test('load html page', async () => {
 });
 
 test('load html page and other internal content', async () => {
-  const requestPath = '/courses';
-  const responseFilePath = path.resolve(__dirname, '__fixtures__/test_2/index.html');
-  nockFileRequests(requestPath, responseFilePath, htmlContentType);
+  const htmlRequestPath = '/courses';
+  const responseHTMLFilePath = path.resolve(__dirname, '__fixtures__/test_2/index.html');
+  nockFileRequests(htmlRequestPath, responseHTMLFilePath, htmlContentType);
 
   const cssRequestPath = '/assets/index.css';
   const responseCSSFilePath = path.resolve(__dirname, '__fixtures__/test_2/index.css');
@@ -56,6 +62,39 @@ test('load html page and other internal content', async () => {
   nockFileRequests(jsRequestPath, responseJSFilePath, jsContentType);
 
   const imgRequestPath = '/assets/index.jpg';
-  const responseImgFilePath = path.resolve(__dirname, '__fixtures__/test_2/index.jpg');
-  nockFileRequests(imgRequestPath, responseImgFilePath, binaryContentType);
+  const responseImgPath = path.resolve(__dirname, '__fixtures__/test_2/index.jpg');
+  nockFileRequests(imgRequestPath, responseImgPath, binaryContentType);
+
+  const requestUrl = `${hostName}${htmlRequestPath}`;
+  const outputPath = await generateOutputPath();
+  await loadPageByPath(requestUrl, outputPath);
+
+  const outputHTMLFileName = 'ru-hexlet-io-courses.html';
+  const outputHTMLFilePath = path.resolve(outputPath, outputHTMLFileName);
+  const outputHTMLFileContent = await fs.readFile(outputHTMLFilePath, 'utf8');
+  const resultHTMLFilePath = path.resolve(__dirname, '__fixtures__/test_2/result.html');
+  const expectedHTMLContent = await fs.readFile(resultHTMLFilePath, 'utf8');
+  expect(outputHTMLFileContent).toEqual(expectedHTMLContent);
+
+  const assetsDirName = 'ru-hexlet-io-courses_files';
+
+  const outputCSSFileName = 'assets-index.css';
+  const outputCSSFilePath = path.resolve(outputPath, assetsDirName, outputCSSFileName);
+  const outputCSSFileContent = await fs.readFile(outputCSSFilePath, 'utf8');
+  const expectedCSSContent = await fs.readFile(responseCSSFilePath, 'utf8');
+  expect(outputCSSFileContent).toEqual(expectedCSSContent);
+
+  const outputJSFileName = 'assets-index.js';
+  const outputJSFilePath = path.resolve(outputPath, assetsDirName, outputJSFileName);
+  const outputJSFileContent = await fs.readFile(outputJSFilePath, 'utf8');
+  const expectedJSContent = await fs.readFile(responseJSFilePath, 'utf8');
+  expect(outputJSFileContent).toEqual(expectedJSContent);
+
+  const outputImgName = 'assets-index.jpg';
+  const outputImgPath = path.resolve(outputPath, assetsDirName, outputImgName);
+  const outputImg = await fs.readFile(outputImgPath, 'utf8');
+  const outputImgAsString = Buffer.from(outputImg).toString('base64');
+  const expectedImg = await fs.readFile(responseCSSFilePath, 'utf8');
+  const expectedImgAsString = Buffer.from(expectedImg).toString('base64');
+  expect(outputImgAsString).toEqual(expectedImgAsString);
 });
