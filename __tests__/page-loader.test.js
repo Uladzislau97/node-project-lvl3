@@ -69,13 +69,6 @@ test('load html page and other internal content', async () => {
   const outputPath = await generateOutputPath();
   await loadPageByPath(requestUrl, outputPath);
 
-  const outputHTMLFileName = 'ru-hexlet-io-courses.html';
-  const outputHTMLFilePath = path.resolve(outputPath, outputHTMLFileName);
-  const outputHTMLFileContent = await fs.readFile(outputHTMLFilePath, 'utf8');
-  const resultHTMLFilePath = path.resolve(__dirname, '__fixtures__/test_2/result.html');
-  const expectedHTMLContent = await fs.readFile(resultHTMLFilePath, 'utf8');
-  expect(outputHTMLFileContent).toEqual(expectedHTMLContent);
-
   const assetsDirName = 'ru-hexlet-io-courses_files';
 
   const outputCSSFileName = 'assets-index.css';
@@ -97,4 +90,11 @@ test('load html page and other internal content', async () => {
   const expectedImg = await fs.readFile(responseCSSFilePath, 'utf8');
   const expectedImgAsString = Buffer.from(expectedImg).toString('base64');
   expect(outputImgAsString).toEqual(expectedImgAsString);
+
+  const outputHTMLFileName = 'ru-hexlet-io-courses.html';
+  const outputHTMLFilePath = path.resolve(outputPath, outputHTMLFileName);
+  const outputHTMLFileContent = await fs.readFile(outputHTMLFilePath, 'utf8');
+  const resultHTMLFilePath = path.resolve(__dirname, '__fixtures__/test_2/result.html');
+  const expectedHTMLContent = await fs.readFile(resultHTMLFilePath, 'utf8');
+  expect(outputHTMLFileContent).toEqual(expectedHTMLContent);
 });
