@@ -12,7 +12,7 @@ const buildName = filepath => filepath
   .join('-');
 
 const buildFileObject = (address, outputPath) => {
-  const { protocol, ext } = url.parse(address);
+  const { protocol } = url.parse(address);
   const filepath = address.replace(`${protocol}//`, '');
   const outputFileName = buildName(filepath);
   return {
@@ -20,7 +20,7 @@ const buildFileObject = (address, outputPath) => {
     name: outputFileName,
     outputPath,
     address,
-    ext,
+    ext: '.html',
   };
 };
 
