@@ -36,19 +36,20 @@ const isLocalResourceObject = ({ tag }) => !url.parse(tag.attrValue).protocol;
 
 const buildLocalResourceObject = ({ tag }, fileObject) => {
   const resourceAddress = url.resolve(fileObject.address, tag.attrValue);
-  const { path: resoursePath } = url.parse(resourceAddress);
-  const { dir, name: filename, ext } = path.parse(resoursePath);
+  const { path: resourcePath } = url.parse(resourceAddress);
+  const { dir, name: filename, ext } = path.parse(resourcePath);
   const filepath = `${dir}/${filename}`;
   const resourceName = buildName(filepath);
   const outputPath = path.resolve(fileObject.outputPath, `${fileObject.name}_files/`);
   const type = tag.name === 'IMG' ? 'bin' : 'file';
+  const resourceTag = { ...tag, newAttrValue: `${fileObject.name}_files/${resourceName}${ext}` };
   return {
     name: resourceName,
     address: resourceAddress,
     outputPath,
     ext,
     type,
-    tag,
+    tag: resourceTag,
   };
 };
 
@@ -67,7 +68,15 @@ const loadPageByPath = (address, outputPath) => {
         .filter(isLocalResourceObject)
         .map(obj => buildLocalResourceObject(obj, fileObject));
 
-      fileObject.data = data;
+      localResourceObjects
+        .map(({ tag }) => tag)
+        .forEach(({
+          name, attrName, attrValue, newAttrValue,
+        }) => {
+          $(`${name}[${attrName}='${attrValue}']`).attr(`${attrName}`, newAttrValue);
+        });
+
+      fileObject.data = $.html();
       fileObject.localResources = localResourceObjects;
       return fileObject;
     })
