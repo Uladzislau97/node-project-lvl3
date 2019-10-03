@@ -53,6 +53,17 @@ const buildLocalResourceObject = ({ tag }, fileObject) => {
   };
 };
 
+const downloadResource = ({ type, address }) => {
+  if (type === 'bin') {
+    return axios({
+      method: 'get',
+      url: address,
+      responseType: 'stream',
+    });
+  }
+  return axios.get(address);
+};
+
 const loadPageByPath = (address, outputPath) => {
   const fileObject = buildFileObject(address, outputPath);
   axios
@@ -78,7 +89,9 @@ const loadPageByPath = (address, outputPath) => {
 
       fileObject.data = $.html();
       fileObject.localResources = localResourceObjects;
-      return fileObject;
+      return Promise.all(
+        fileObject.localResources.map(downloadResource),
+      );
     })
     .then(values => console.log(values));
 };
