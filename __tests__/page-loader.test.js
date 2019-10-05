@@ -31,8 +31,14 @@ const generateOutputPath = async () => {
   return outputPath;
 };
 
+const deleteLineBreaks = string => string
+  .split('\n')
+  .filter(str => str)
+  .map(str => str.trim())
+  .join('');
+
 test('load html page', async () => {
-  const requestPath = '/courses';
+  const requestPath = '/courses_1';
   const responseFilePath = path.resolve(__dirname, '__fixtures__/test_1/index.html');
   nockFileRequests(requestPath, responseFilePath, htmlContentType);
 
@@ -40,16 +46,19 @@ test('load html page', async () => {
   const outputPath = await generateOutputPath();
   await loadPageByPath(requestUrl, outputPath);
 
-  const outputFileName = 'ru-hexlet-io-courses.html';
+  const outputFileName = 'ru-hexlet-io-courses-1.html';
   const outputFilePath = path.resolve(outputPath, outputFileName);
   const outputFileContent = await fs.readFile(outputFilePath, 'utf8');
   const expectedContent = await fs.readFile(responseFilePath, 'utf8');
-
-  expect(outputFileContent).toEqual(expectedContent);
+  expect(
+    deleteLineBreaks(outputFileContent),
+  ).toEqual(
+    deleteLineBreaks(expectedContent),
+  );
 });
 
 test('load html page and other internal content', async () => {
-  const htmlRequestPath = '/courses';
+  const htmlRequestPath = '/courses_2';
   const responseHTMLFilePath = path.resolve(__dirname, '__fixtures__/test_2/index.html');
   nockFileRequests(htmlRequestPath, responseHTMLFilePath, htmlContentType);
 
@@ -69,19 +78,27 @@ test('load html page and other internal content', async () => {
   const outputPath = await generateOutputPath();
   await loadPageByPath(requestUrl, outputPath);
 
-  const assetsDirName = 'ru-hexlet-io-courses_files';
+  const assetsDirName = 'ru-hexlet-io-courses-2_files';
 
   const outputCSSFileName = 'assets-index.css';
   const outputCSSFilePath = path.resolve(outputPath, assetsDirName, outputCSSFileName);
   const outputCSSFileContent = await fs.readFile(outputCSSFilePath, 'utf8');
   const expectedCSSContent = await fs.readFile(responseCSSFilePath, 'utf8');
-  expect(outputCSSFileContent).toEqual(expectedCSSContent);
+  expect(
+    deleteLineBreaks(outputCSSFileContent),
+  ).toEqual(
+    deleteLineBreaks(expectedCSSContent),
+  );
 
   const outputJSFileName = 'assets-index.js';
   const outputJSFilePath = path.resolve(outputPath, assetsDirName, outputJSFileName);
   const outputJSFileContent = await fs.readFile(outputJSFilePath, 'utf8');
   const expectedJSContent = await fs.readFile(responseJSFilePath, 'utf8');
-  expect(outputJSFileContent).toEqual(expectedJSContent);
+  expect(
+    deleteLineBreaks(outputJSFileContent),
+  ).toEqual(
+    deleteLineBreaks(expectedJSContent),
+  );
 
   const outputImgName = 'assets-index.jpg';
   const outputImgPath = path.resolve(outputPath, assetsDirName, outputImgName);
@@ -91,10 +108,14 @@ test('load html page and other internal content', async () => {
   const expectedImgAsString = Buffer.from(expectedImg).toString('base64');
   expect(outputImgAsString).toEqual(expectedImgAsString);
 
-  const outputHTMLFileName = 'ru-hexlet-io-courses.html';
+  const outputHTMLFileName = 'ru-hexlet-io-courses-2.html';
   const outputHTMLFilePath = path.resolve(outputPath, outputHTMLFileName);
   const outputHTMLFileContent = await fs.readFile(outputHTMLFilePath, 'utf8');
   const resultHTMLFilePath = path.resolve(__dirname, '__fixtures__/test_2/result.html');
   const expectedHTMLContent = await fs.readFile(resultHTMLFilePath, 'utf8');
-  expect(outputHTMLFileContent).toEqual(expectedHTMLContent);
+  expect(
+    deleteLineBreaks(outputHTMLFileContent),
+  ).toEqual(
+    deleteLineBreaks(expectedHTMLContent),
+  );
 });
