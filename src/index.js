@@ -1,8 +1,9 @@
 import axios from 'axios';
-import { promises as fs } from 'fs';
+import fs from 'fs';
 import path from 'path';
 import url from 'url';
 import cheerio from 'cheerio';
+import _ from 'lodash';
 
 const notLettersOrNumbersRegex = /[\W_]/g;
 
@@ -64,9 +65,19 @@ const downloadResource = ({ type, address }) => {
   return axios.get(address);
 };
 
+const writeResource = ({
+  outputPath, name, ext, data, type,
+}) => {
+  const fullOutputPath = path.resolve(outputPath, `${name}${ext}`);
+  if (type === 'bin') {
+    return data.pipe(fs.createWriteStream(fullOutputPath));
+  }
+  return fs.promises.writeFile(fullOutputPath, data);
+};
+
 const loadPageByPath = (address, outputPath) => {
   const fileObject = buildFileObject(address, outputPath);
-  axios
+  return axios
     .get(address)
     .then(({ data }) => {
       const $ = cheerio.load(data);
@@ -88,12 +99,20 @@ const loadPageByPath = (address, outputPath) => {
         });
 
       fileObject.data = $.html();
-      fileObject.localResources = localResourceObjects;
+      fileObject.localResourceObjects = localResourceObjects;
+
       return Promise.all(
-        fileObject.localResources.map(downloadResource),
+        fileObject.localResourceObjects.map(downloadResource),
       );
     })
-    .then(values => console.log(values));
+    .then((downloadedResources) => {
+      fileObject.localResourceObjects = _
+        .zip(fileObject.localResourceObjects, downloadedResources)
+        .map(([resourceObject, downloadedResource]) => (
+          { ...resourceObject, data: downloadedResource.data }
+        ));
+      return [...fileObject.localResourceObjects, fileObject].map(writeResource);
+    });
 };
 
 export default loadPageByPath;
