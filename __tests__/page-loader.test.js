@@ -104,7 +104,7 @@ test('load html page and other internal content', async () => {
   const outputImgPath = path.resolve(outputPath, assetsDirName, outputImgName);
   const outputImg = await fs.readFile(outputImgPath, 'utf8');
   const outputImgAsString = Buffer.from(outputImg).toString('base64');
-  const expectedImg = await fs.readFile(responseCSSFilePath, 'utf8');
+  const expectedImg = await fs.readFile(responseImgPath, 'utf8');
   const expectedImgAsString = Buffer.from(expectedImg).toString('base64');
   expect(outputImgAsString).toEqual(expectedImgAsString);
 
