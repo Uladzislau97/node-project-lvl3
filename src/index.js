@@ -111,10 +111,10 @@ const loadPageByPath = (address, outputPath) => {
         .map(([resourceObject, downloadedResource]) => (
           { ...resourceObject, data: downloadedResource.data }
         ));
-   
       if (fileObject.localResourceObjects.length > 0) {
         return fs.mkdir(fileObject.resourcesFolderPath);
       }
+      return null;
     })
     .then(() => Promise.all(
       fileObject.localResourceObjects.map(writeResource),
