@@ -58,7 +58,7 @@ test('load html page and other internal content', async () => {
   await fs.unlink(outputImgPath).catch(_.noop);
 
   const resourcesDirPath = path.resolve(outputPath, assetsDirName);
-  await fs.unlink(resourcesDirPath).catch(_.noop);
+  await fs.rmdir(resourcesDirPath).catch(_.noop);
 
   const host = 'https://hexlet.io';
 
