@@ -13,3 +13,6 @@
 #
 ##### SAVE FILE BY SPECIFIED PATH (THE DIRECTORY OF LAUNCH BY DEFAULT)
 [![asciicast](https://asciinema.org/a/MpTVNi3XNPtiHUY2dOF6bPHpy.svg)](https://asciinema.org/a/MpTVNi3XNPtiHUY2dOF6bPHpy)
+#
+##### SAVE ALSO LOCAL RESOURCES TO SEPARATE FOLDER
+[![asciicast](https://asciinema.org/a/yE31nTb64EkDZpjnMSeWukInP.svg)](https://asciinema.org/a/yE31nTb64EkDZpjnMSeWukInP)
