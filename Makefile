@@ -14,6 +14,9 @@ lint:
 test:
 	npm test
 
+test-debug:
+	npm run test-debug
+
 test-watch:
 	npm test -- --watch
 
