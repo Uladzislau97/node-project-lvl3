@@ -18,6 +18,7 @@
   ],
   "scripts": {
     "test": "jest",
+    "test-debug": "DEBUG=page-loader-js jest",
     "build": "NODE_ENV=production babel src --out-dir dist --source-maps inline",
     "prepublishOnly": "npm run build"
   },

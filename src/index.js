@@ -4,7 +4,9 @@ import path from 'path';
 import url from 'url';
 import cheerio from 'cheerio';
 import _ from 'lodash';
+import debug from 'debug';
 
+const pageLoaderLog = debug('page-loader-js');
 const notLettersOrNumbersRegex = /[\W_]/g;
 
 const buildName = filepath => filepath
@@ -75,6 +77,9 @@ const writeResource = ({
 };
 
 const loadPageByPath = (address, outputPath) => {
+  pageLoaderLog(`address: ${address}`);
+  pageLoaderLog(`output path: ${outputPath}`);
+
   const fileObject = buildFileObject(address, outputPath);
   return axios
     .get(address)
@@ -96,6 +101,8 @@ const loadPageByPath = (address, outputPath) => {
         }) => {
           $(`${name}[${attrName}='${attrValue}']`).attr(`${attrName}`, newAttrValue);
         });
+
+      pageLoaderLog(`local resource objects: ${JSON.stringify(localResourceObjects, null, 2)}`);
 
       fileObject.data = $.html();
       fileObject.localResourceObjects = localResourceObjects;
